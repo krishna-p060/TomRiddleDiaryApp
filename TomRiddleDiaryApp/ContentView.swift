@@ -9,13 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        DiaryPageView()
+            .ignoresSafeArea(.all)
+            .background(
+                // Aged paper background
+                Color(red: 0.98, green: 0.95, blue: 0.87)
+                    .ignoresSafeArea(.all)
+            )
+            .preferredColorScheme(.light)
     }
 }
 
