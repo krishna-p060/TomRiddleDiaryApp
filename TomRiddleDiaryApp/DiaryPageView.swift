@@ -46,33 +46,72 @@ struct DiaryPageView: View {
     
     private var backgroundView: some View {
         ZStack {
-            // Base aged paper color
-            Color(red: 0.98, green: 0.95, blue: 0.87)
+            // Base aged paper color - warmer, more yellowed
+            Color(red: 0.94, green: 0.89, blue: 0.76)
             
-            // Subtle paper texture and aging effects
+            // Multiple gradient layers for realistic aging
+            
+            // Overall aging gradient from center
             Rectangle()
                 .fill(
                     RadialGradient(
                         colors: [
-                            Color.black.opacity(0.02),
                             Color.clear,
-                            Color.brown.opacity(0.03)
+                            Color.brown.opacity(0.08),
+                            Color.brown.opacity(0.15)
                         ],
                         center: .center,
-                        startRadius: 100,
-                        endRadius: 500
+                        startRadius: 50,
+                        endRadius: 600
                     )
                 )
             
-            // Diary lines (optional)
-            VStack(spacing: 30) {
-                ForEach(0..<20, id: \.self) { _ in
-                    Rectangle()
-                        .fill(Color.blue.opacity(0.1))
-                        .frame(height: 1)
-                }
-            }
-            .padding(.horizontal, 60)
+            // Corner aging - darker edges
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.brown.opacity(0.12),
+                            Color.clear,
+                            Color.clear,
+                            Color.brown.opacity(0.12)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+            
+            // Subtle stains and discoloration
+            Circle()
+                .fill(Color.brown.opacity(0.04))
+                .frame(width: 150, height: 100)
+                .offset(x: -100, y: -200)
+            
+            Circle()
+                .fill(Color.yellow.opacity(0.06))
+                .frame(width: 200, height: 120)
+                .offset(x: 120, y: 180)
+            
+            Circle()
+                .fill(Color.brown.opacity(0.03))
+                .frame(width: 80, height: 60)
+                .offset(x: -150, y: 100)
+            
+            // Very subtle overall texture
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.01),
+                            Color.clear,
+                            Color.brown.opacity(0.02),
+                            Color.clear,
+                            Color.black.opacity(0.01)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
         }
         .ignoresSafeArea(.all)
     }
@@ -136,7 +175,7 @@ struct DiaryPageView: View {
             // Tom Riddle's handwritten response
             StreamingTextView(
                 text: viewModel.currentResponse,
-                font: .handwritten(size: 26),
+                font: .handwritten(size: 36),
                 color: Color(red: 0.1, green: 0.3, blue: 0.1), // Dark green ink
                 typingSpeed: 0.12 // Slightly slower for handwriting effect
             )

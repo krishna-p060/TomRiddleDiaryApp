@@ -19,12 +19,19 @@ struct ScribbleTextView: UIViewRepresentable {
         // Configure for Scribble handwriting input
         textView.backgroundColor = UIColor.clear
         textView.font = UIFont(name: "Noteworthy-Regular", size: 28) ?? UIFont.systemFont(ofSize: 28)
-        textView.textColor = UIColor(red: 0.2, green: 0.1, blue: 0.1, alpha: 1.0) // Dark brown ink
+        
+        // MAKE TYPED TEXT INVISIBLE (but keep pencil strokes visible)
+        textView.textColor = UIColor.clear  // This hides only the typed text
+        textView.tintColor = UIColor.clear  // This hides the cursor
+        
         textView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         textView.isScrollEnabled = true
         textView.showsVerticalScrollIndicator = false
         textView.showsHorizontalScrollIndicator = false
         textView.textContainer.lineFragmentPadding = 0
+        
+        // DON'T use alpha - it hides everything including pencil strokes!
+        // textView.alpha = 0.01  // REMOVE THIS LINE
         
         // Enable Scribble
         let scribbleInteraction = UIScribbleInteraction(delegate: context.coordinator)
