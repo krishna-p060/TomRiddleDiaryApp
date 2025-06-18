@@ -8,15 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var onboardingManager = OnboardingManager()
+    
     var body: some View {
-        DiaryPageView()
-            .ignoresSafeArea(.all)
-            .background(
-                // Aged paper background
-                Color(red: 0.98, green: 0.95, blue: 0.87)
-                    .ignoresSafeArea(.all)
-            )
-            .preferredColorScheme(.light)
+        ZStack {
+            if onboardingManager.showOnboarding {
+                OnboardingView {
+                    onboardingManager.completeOnboarding()
+                }
+                .transition(.opacity)
+            } else {
+                DiaryPageView()
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.5), value: onboardingManager.showOnboarding)
     }
 }
 
