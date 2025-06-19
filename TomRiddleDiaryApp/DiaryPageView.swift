@@ -10,6 +10,7 @@ import SwiftUI
 struct DiaryPageView: View {
     @StateObject private var viewModel = DiaryViewModel()
     @State private var showingResponse = false
+    @State private var showingPromptEditor = false
     
     var body: some View {
         ZStack {
@@ -20,7 +21,6 @@ struct DiaryPageView: View {
             VStack(spacing: 0) {
                 if showingResponse {
                     // Tom Riddle's response area
-                    
                     responseView
                         .transition(.opacity.combined(with: .scale))
                 } else {
@@ -28,6 +28,29 @@ struct DiaryPageView: View {
                     writingView
                         .transition(.opacity.combined(with: .scale))
                 }
+            }
+            
+            // Circular button at top right
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showingPromptEditor = true
+                    }) {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(
+                                Circle()
+                                    .fill(Color.black.opacity(0.6))
+                                    .shadow(radius: 3)
+                            )
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.top, 10)
+                }
+                Spacer()
             }
         }
 //        .animation(.easeInOut(duration: 0.5), value: showingResponse)
@@ -40,6 +63,9 @@ struct DiaryPageView: View {
             if isCleared {
                 showingResponse = false
             }
+        }
+        .sheet(isPresented: $showingPromptEditor) {
+            PromptEditorView(viewModel: viewModel)
         }
     }
     

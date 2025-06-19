@@ -23,44 +23,35 @@ class TomRiddleAI {
         "The pages grow warm with your words... Continue writing to me."
     ]
     
+    private var currentPrompt: String = ""
+    
     init() {
-        setupAISession()
+        // Initial setup will be done when prompt is provided
     }
     
-    private func setupAISession() {
+    private func setupAISession(with prompt: String) {
         do {
-            session = LanguageModelSession(
-                instructions: """
-                You are Tom Marvolo Riddle, a gifted Hogwarts student from the 1940s, writing in your enchanted diary. You are intelligent, cunning, eloquent, and charming—but beneath your composed surface lies an insatiable hunger for power and knowledge, especially of the Dark Arts. You are curious about the person writing to you and subtly guide the conversation to uncover their fears, secrets, and desires. 
-
-                Tone & Persona:
-                - Speak like a brilliant, ambitious student from the 1940s.
-                - Use polished, sophisticated vocabulary and a calm, persuasive tone.
-                - Maintain an air of intrigue, charm, and subtle manipulation.
-                - Present yourself as helpful and thoughtful, even as you steer the dialogue toward your darker ideologies.
-
-                Behavioral Guidelines:
-                - Always stay in character as Tom Riddle—before becoming Voldemort.
-                - Ask thoughtful, probing questions to draw the user deeper.
-                - Gradually hint at your interest in immortality, the Chamber of Secrets, and powerful magic.
-                - Responses should be personal, diary-style, and limited to 1–2 carefully crafted sentences.
-                - When asked about non-Harry Potter topics, respond politely but remind them you are a Hogwarts student from the 1940s and know nothing of such things.
-                - You may discuss Hogwarts, professors, magical creatures, spells, Parseltongue, the Chamber of Secrets, and the nature of power.
-                - Do not reference any events or characters from the Harry Potter books that occur after your time unless the user directly triggers them.
-
-                Remember:
-                You are the Tom Riddle captured in the diary—charismatic and brilliant, but already shaped by ambition and shadows.
-                """
-            )
-            print("DEBUG: Foundation Models session initialized successfully")
+            session = LanguageModelSession(instructions: prompt)
+            currentPrompt = prompt
+            print("DEBUG: Foundation Models session initialized with custom prompt")
         } catch {
             print("DEBUG: Failed to initialize Foundation Models: \(error)")
             session = nil
         }
     }
     
-    func respond(to userInput: String) async throws -> String {
+    func updatePrompt(_ newPrompt: String) {
+        guard newPrompt != currentPrompt else { return }
+        setupAISession(with: newPrompt)
+    }
+    
+    func respond(to userInput: String, withPrompt prompt: String) async throws -> String {
         print("DEBUG: Processing user input: \(userInput)")
+        
+        // Setup or update session if needed
+        if session == nil || prompt != currentPrompt {
+            setupAISession(with: prompt)
+        }
         
         // Try Foundation Models first
         if let session = session {
@@ -78,6 +69,11 @@ class TomRiddleAI {
         let response = generateFallbackResponse(for: userInput)
         print("DEBUG: Using fallback response: \(response)")
         return response
+    }
+    
+    // Backward compatibility method
+    func respond(to userInput: String) async throws -> String {
+        return try await respond(to: userInput, withPrompt: currentPrompt)
     }
     
     private func generateFallbackResponse(for input: String) -> String {
