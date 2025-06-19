@@ -65,7 +65,7 @@ struct DiaryPageView: View {
             }
         }
         .sheet(isPresented: $showingPromptEditor) {
-            PromptEditorView(viewModel: viewModel)
+            SettingsView(viewModel: viewModel)
         }
     }
     
@@ -201,7 +201,7 @@ struct DiaryPageView: View {
             // Tom Riddle's handwritten response
             StreamingTextView(
                 text: viewModel.currentResponse,
-                font: .handwritten(size: 36),
+                font: .handwritten(size: viewModel.responseTextSize),
                 color: Color(red: 0.1, green: 0.3, blue: 0.1), // Dark green ink
                 typingSpeed: 0.12 // Slightly slower for handwriting effect
             )

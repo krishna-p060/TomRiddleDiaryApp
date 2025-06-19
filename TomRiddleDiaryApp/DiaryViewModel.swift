@@ -16,6 +16,7 @@ class DiaryViewModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var isCleared: Bool = false
     @Published var customPrompt: String = ""
+    @Published var responseTextSize: Double = 36.0
     
     private let tomRiddleAI = TomRiddleAI()
     private var cancellables = Set<AnyCancellable>()
@@ -67,6 +68,9 @@ class DiaryViewModel: ObservableObject {
         } else {
             customPrompt = defaultPrompt
         }
+        
+        let savedTextSize = UserDefaults.standard.double(forKey: "ResponseTextSize")
+        responseTextSize = savedTextSize > 0 ? savedTextSize : 36.0
     }
     
     private func saveCustomPrompt() {
@@ -122,4 +126,10 @@ class DiaryViewModel: ObservableObject {
         // Update the AI with default prompt
         tomRiddleAI.updatePrompt(defaultPrompt)
     }
+    
+    func updateTextSize(_ newSize: Double) {
+            responseTextSize = newSize
+            UserDefaults.standard.set(newSize, forKey: "ResponseTextSize")
+    }
+    
 }
