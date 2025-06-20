@@ -47,7 +47,7 @@ struct SettingsView: View {
                 Section("Advanced Settings") {
                     if purchaseManager.hasPremiumAccess {
                         // Show prompt editing
-                        NavigationLink("Edit Tom's Personality") {
+                        NavigationLink("Edit Personality") {
                             PromptEditorView(viewModel: viewModel)
                         }
                     } else {

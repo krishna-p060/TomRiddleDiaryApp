@@ -22,12 +22,12 @@ struct PromptEditorView: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     // Header
-                    Text("Tom Riddle's Instructions")
+                    Text("Instructions")
                         .font(.handwritten(size: 28))
                         .foregroundColor(Color(red: 0.1, green: 0.3, blue: 0.1))
                         .padding(.top, 20)
                     
-                    Text("These are the instructions that guide Tom's responses:")
+                    Text("These are the instructions that guide responses:")
                         .font(.handwritten(size: 16))
                         .foregroundColor(.gray)
                     
