@@ -4,10 +4,6 @@
 <dict>
 	<key>NSApplePencilUsageDescription</key>
 	<true/>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string></string>
-	</array>
 	<key>UISupportsIndirectInputEvents</key>
 	<true/>
 </dict>

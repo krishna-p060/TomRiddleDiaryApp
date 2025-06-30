@@ -10,24 +10,51 @@ import SwiftUI
 struct DiaryPageView: View {
     @StateObject private var viewModel = DiaryViewModel()
     @State private var showingResponse = false
+    @State private var showingPromptEditor = false
     
     var body: some View {
         ZStack {
             // Aged paper background with subtle texture
             backgroundView
             
-            // Main content
-            VStack(spacing: 0) {
-                if showingResponse {
-                    // Tom Riddle's response area
-                    
-                    responseView
-                        .transition(.opacity.combined(with: .scale))
-                } else {
-                    // User writing area
-                    writingView
-                        .transition(.opacity.combined(with: .scale))
+            // Main scrollable content
+            ScrollView {
+                VStack(spacing: 0) {
+                    if showingResponse {
+                        // Tom Riddle's response area
+                        responseView
+                            .transition(.opacity.combined(with: .scale))
+                    } else {
+                        // User writing area
+                        writingView
+                            .transition(.opacity.combined(with: .scale))
+                    }
                 }
+                .frame(minHeight: UIScreen.main.bounds.height) // Ensure full screen height
+            }
+            .scrollIndicators(.hidden) // Hide scroll indicators for clean look
+            
+            // Circular button at top right (stays fixed)
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showingPromptEditor = true
+                    }) {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(
+                                Circle()
+                                    .fill(Color.black.opacity(0.6))
+                                    .shadow(radius: 3)
+                            )
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.top, 10)
+                }
+                Spacer()
             }
         }
 //        .animation(.easeInOut(duration: 0.5), value: showingResponse)
@@ -40,6 +67,9 @@ struct DiaryPageView: View {
             if isCleared {
                 showingResponse = false
             }
+        }
+        .sheet(isPresented: $showingPromptEditor) {
+            SettingsView(viewModel: viewModel)
         }
     }
     
@@ -175,12 +205,13 @@ struct DiaryPageView: View {
             // Tom Riddle's handwritten response
             StreamingTextView(
                 text: viewModel.currentResponse,
-                font: .handwritten(size: 36),
+                font: .handwritten(size: viewModel.responseTextSize),
                 color: Color(red: 0.1, green: 0.3, blue: 0.1), // Dark green ink
                 typingSpeed: 0.12 // Slightly slower for handwriting effect
             )
             .padding(40)
             .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading) // Allow text to expand
             
             Spacer()
             
