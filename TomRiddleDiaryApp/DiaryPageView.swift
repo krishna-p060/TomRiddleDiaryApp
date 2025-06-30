@@ -17,20 +17,24 @@ struct DiaryPageView: View {
             // Aged paper background with subtle texture
             backgroundView
             
-            // Main content
-            VStack(spacing: 0) {
-                if showingResponse {
-                    // Tom Riddle's response area
-                    responseView
-                        .transition(.opacity.combined(with: .scale))
-                } else {
-                    // User writing area
-                    writingView
-                        .transition(.opacity.combined(with: .scale))
+            // Main scrollable content
+            ScrollView {
+                VStack(spacing: 0) {
+                    if showingResponse {
+                        // Tom Riddle's response area
+                        responseView
+                            .transition(.opacity.combined(with: .scale))
+                    } else {
+                        // User writing area
+                        writingView
+                            .transition(.opacity.combined(with: .scale))
+                    }
                 }
+                .frame(minHeight: UIScreen.main.bounds.height) // Ensure full screen height
             }
+            .scrollIndicators(.hidden) // Hide scroll indicators for clean look
             
-            // Circular button at top right
+            // Circular button at top right (stays fixed)
             VStack {
                 HStack {
                     Spacer()
@@ -207,6 +211,7 @@ struct DiaryPageView: View {
             )
             .padding(40)
             .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading) // Allow text to expand
             
             Spacer()
             
